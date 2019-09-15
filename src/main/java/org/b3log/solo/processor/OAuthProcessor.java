@@ -113,25 +113,8 @@ public class OAuthProcessor {
      */
     @RequestProcessing(value = "/oauth/github/redirect", method = HttpMethod.GET)
     public void redirectAuth(final RequestContext context) {
-        final HttpResponse res = HttpRequest.get("https://hacpai.com/oauth/solo/client2").trustAllCerts(true).
-                connectionTimeout(3000).timeout(7000).header("User-Agent", Solos.USER_AGENT).send();
-        if (HttpServletResponse.SC_OK != res.statusCode()) {
-            LOGGER.log(Level.ERROR, "Gets oauth client id failed: " + res.toString());
-
-            context.sendError(HttpServletResponse.SC_NOT_FOUND);
-
-            return;
-        }
-        res.charset("UTF-8");
-        final JSONObject result = new JSONObject(res.bodyText());
-        if (0 != result.optInt(Keys.CODE)) {
-            LOGGER.log(Level.ERROR, "Gets oauth client id failed: " + result.optString(Keys.MSG));
-
-            return;
-        }
-        final JSONObject data = result.optJSONObject(Keys.DATA);
-        final String clientId = data.optString("clientId");
-        final String loginAuthURL = data.optString("loginAuthURL");
+        final String clientId = Solos.GITHUB_CLIENT_ID;
+        final String loginAuthURL = "https://github.com/login/oauth/authorize";
 
         String referer = context.param("referer");
         if (StringUtils.isBlank(referer)) {
@@ -144,6 +127,23 @@ public class OAuthProcessor {
         final String path = loginAuthURL + "?client_id=" + clientId + "&state=" + URLs.encode(state) + "&scope=public_repo,read:user,user:follow";
 
         context.sendRedirect(path);
+    }
+
+    @RequestProcessing(value = "/oauth/github-call", method = HttpMethod.GET)
+    public synchronized void getAK(final RequestContext context) {
+        String code = context.param("code");
+        String state = context.param("state");
+        final HttpResponse res = HttpRequest.get("https://github.com/login/oauth/access_token?client_id="+Solos.GITHUB_CLIENT_ID+"&client_secret="+Solos.GITHUB_CLIENT_SECRET+"&code=" + code).trustAllCerts(true).
+                connectionTimeout(3000).timeout(7000).send();
+        if (HttpServletResponse.SC_OK != res.statusCode()) {
+            LOGGER.log(Level.ERROR, "Gets oauth client id failed: " + res.toString());
+            context.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        res.charset("UTF-8");
+        String atoke = res.body().split("&")[0].split("=")[1];
+        System.out.println(atoke);
+        context.sendRedirect(String.format("http://127.0.0.1:8080/oauth/github?state=%s&ak=%s", state, atoke));
     }
 
     /**

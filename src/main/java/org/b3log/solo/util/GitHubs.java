@@ -88,8 +88,8 @@ public final class GitHubs {
      */
     public static JSONObject getGitHubUserInfo(final String accessToken) {
         try {
-            final HttpResponse res = HttpRequest.get("https://hacpai.com/github/user?ak=" + accessToken).trustAllCerts(true).
-                    connectionTimeout(3000).timeout(7000).header("User-Agent", Solos.USER_AGENT).send();
+            final HttpResponse res = HttpRequest.get("https://api.github.com/user?access_token=" + accessToken).trustAllCerts(true).
+                    connectionTimeout(3000).timeout(7000).send();
             if (HttpServletResponse.SC_OK != res.statusCode()) {
                 return null;
             }
@@ -98,10 +98,9 @@ public final class GitHubs {
             if (0 != result.optInt(Keys.STATUS_CODE)) {
                 return null;
             }
-            final JSONObject data = result.optJSONObject(Common.DATA);
-            final String userName = StringUtils.trim(data.optString("userName"));
-            final String openId = data.optString("userId");
-            final String avatarUrl = data.optString("userAvatarURL");
+            final String userName = StringUtils.trim(result.optString("login"));
+            final String openId = result.optString("id");
+            final String avatarUrl = result.optString("avatar_url");
 
             final JSONObject ret = new JSONObject();
             ret.put("openId", openId);

@@ -67,6 +67,8 @@ public final class Solos {
      * Favicon API.
      */
     public static final String FAVICON_API;
+    public static final String GITHUB_CLIENT_ID;
+    public static final String GITHUB_CLIENT_SECRET;
 
     /**
      * Solo User-Agent.
@@ -102,6 +104,8 @@ public final class Solos {
         }
 
         FAVICON_API = solo.getString("faviconAPI");
+        GITHUB_CLIENT_ID = solo.getString("github_client_id");
+        GITHUB_CLIENT_SECRET = solo.getString("github_client_secret");
     }
 
     static {
