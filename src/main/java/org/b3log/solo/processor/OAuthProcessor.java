@@ -133,6 +133,7 @@ public class OAuthProcessor {
     public synchronized void getAK(final RequestContext context) {
         String code = context.param("code");
         String state = context.param("state");
+        String referer = context.getRequest().getRequestURL().toString().split("/oauth")[0];
         final HttpResponse res = HttpRequest.get("https://github.com/login/oauth/access_token?client_id="+Solos.GITHUB_CLIENT_ID+"&client_secret="+Solos.GITHUB_CLIENT_SECRET+"&code=" + code).trustAllCerts(true).
                 connectionTimeout(3000).timeout(7000).send();
         if (HttpServletResponse.SC_OK != res.statusCode()) {
@@ -143,7 +144,7 @@ public class OAuthProcessor {
         res.charset("UTF-8");
         String atoke = res.body().split("&")[0].split("=")[1];
         System.out.println(atoke);
-        context.sendRedirect(String.format("http://127.0.0.1:8080/oauth/github?state=%s&ak=%s", state, atoke));
+        context.sendRedirect(String.format(referer+"/oauth/github?state=%s&ak=%s", state, atoke));
     }
 
     /**

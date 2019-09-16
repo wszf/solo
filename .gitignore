@@ -11,3 +11,5 @@ solo.iml
 /.settings/
 /.classpath
 /.project
+src/main/resources/local.properties
+src/main/resources/solo.properties
