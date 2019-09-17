@@ -38,10 +38,6 @@
 </div>
 <div id="tabPreferencePanel" class="sub-tabs-main">
     <div id="tabPreferencePanel_config" class="form">
-        <div class="fn__clear">
-            <a style="line-height: 32px" href="https://hacpai.com/settings" target="_blank">前往配置 GitHub，Twitter 等站点链接</a>
-            <button onclick="admin.preference.update()" class="fn__right">${updateLabel}</button>
-        </div>
         <div class="fn__clear"></div>
         <label for="blogTitle">${blogTitle1Label}</label>
         <input id="blogTitle" type="text"/>
@@ -59,10 +55,6 @@
         <textarea rows="6" id="noticeBoard"></textarea>
         <label for="footerContent">${footerContent1Label}</label>
         <textarea rows="2" id="footerContent"></textarea><br><br>
-        <div class="fn__clear">
-            <a style="line-height: 32px" href="https://hacpai.com/settings" target="_blank">前往配置 GitHub，Twitter 等站点链接</a>
-            <button onclick="admin.preference.update()" class="fn__right">${updateLabel}</button>
-        </div>
     </div>
     <div id="tabPreferencePanel_setting" class="fn__none form">
         <button class="fn__right" onclick="admin.preference.update()">${updateLabel}</button>
