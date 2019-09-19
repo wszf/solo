@@ -45,34 +45,7 @@ public final class GitHubs {
      */
     private static final Logger LOGGER = Logger.getLogger(GitHubs.class);
 
-    /**
-     * Gets GitHub repos.
-     *
-     * @param githubUserId the specified GitHub user id
-     * @return GitHub repos, returns {@code null} if not found
-     */
-    public static JSONArray getGitHubRepos(final String githubUserId) {
-        try {
-            final HttpResponse res = HttpRequest.get("https://hacpai.com/github/repos?id=" + githubUserId).trustAllCerts(true).
-                    connectionTimeout(3000).timeout(7000).header("User-Agent", Solos.USER_AGENT).send();
-            if (HttpServletResponse.SC_OK != res.statusCode()) {
-                return null;
-            }
-            res.charset("UTF-8");
-            final JSONObject result = new JSONObject(res.bodyText());
-            if (0 != result.optInt(Keys.STATUS_CODE)) {
-                return null;
-            }
-            final JSONObject data = result.optJSONObject(Common.DATA);
-            final JSONArray ret = data.optJSONArray("githubrepos");
 
-            return ret;
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Gets GitHub repos failed", e);
-
-            return null;
-        }
-    }
 
     /**
      * Gets GitHub user info.

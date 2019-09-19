@@ -94,59 +94,7 @@ public class UserMgmtService {
     @Inject
     private InitService initService;
 
-    /**
-     * Refresh usite. 展示站点连接 https://github.com/b3log/solo/issues/12719
-     */
-    public void refreshUSite() {
-        if (!initService.isInited()) {
-            return;
-        }
 
-        JSONObject admin;
-        try {
-            admin = userRepository.getAdmin();
-        } catch (final Exception e) {
-            return;
-        }
-
-        JSONObject usite;
-        try {
-            final JSONObject requestJSON = new JSONObject().
-                    put(User.USER_NAME, admin.optString(User.USER_NAME)).
-                    put(UserExt.USER_B3_KEY, admin.optString(UserExt.USER_B3_KEY));
-            final HttpResponse res = HttpRequest.post("https://hacpai.com/user/usite").trustAllCerts(true).
-                    connectionTimeout(3000).timeout(7000).header("User-Agent", Solos.USER_AGENT).
-                    body(requestJSON.toString()).send();
-            if (HttpServletResponse.SC_OK != res.statusCode()) {
-                return;
-            }
-            res.charset("UTF-8");
-            final JSONObject result = new JSONObject(res.bodyText());
-            if (0 != result.optInt(Keys.STATUS_CODE)) {
-                return;
-            }
-            usite = result.optJSONObject(Common.DATA);
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Gets usite failed", e);
-
-            return;
-        }
-
-        JSONObject usiteOpt = optionQueryService.getOptionById(Option.ID_C_USITE);
-        if (null == usiteOpt) {
-            usiteOpt = new JSONObject();
-            usiteOpt.put(Keys.OBJECT_ID, Option.ID_C_USITE);
-            usiteOpt.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_HACPAI);
-        }
-        usiteOpt.put(Option.OPTION_VALUE, usite.toString());
-        try {
-            optionMgmtService.addOrUpdateOption(usiteOpt);
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Updates usite option failed", e);
-
-            return;
-        }
-    }
 
     /**
      * Updates a user by the specified request json object.

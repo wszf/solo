@@ -153,12 +153,6 @@ public class AdminConsole {
             dataModel.put(Common.UPLOAD_TOKEN, "");
             dataModel.put(Common.UPLOAD_URL, "");
             dataModel.put(Common.UPLOAD_MSG, langPropsService.get("getUploadTokenErrLabel"));
-            final JSONObject upload = Solos.getUploadToken(context);
-            if (null != upload) {
-                dataModel.put(Common.UPLOAD_TOKEN, upload.optString(Common.UPLOAD_TOKEN));
-                dataModel.put(Common.UPLOAD_URL, upload.optString(Common.UPLOAD_URL));
-                dataModel.put(Common.UPLOAD_MSG, upload.optString(Common.UPLOAD_MSG));
-            }
             dataModelService.fillFaviconURL(dataModel, preference);
             dataModelService.fillUsite(dataModel);
             dataModelService.fillCommon(context, dataModel, preference);

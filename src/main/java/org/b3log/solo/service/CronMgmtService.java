@@ -96,8 +96,7 @@ public class CronMgmtService {
 
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(() -> {
             try {
-                articleMgmtService.refreshGitHub();
-                userMgmtService.refreshUSite();
+
             } catch (final Exception e) {
                 LOGGER.log(Level.ERROR, "Executes cron failed", e);
             } finally {
